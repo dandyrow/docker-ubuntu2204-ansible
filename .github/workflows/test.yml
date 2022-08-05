@@ -1,5 +1,5 @@
 ---
-name: Test podman image
+name: Test Podman image
 
 on:
   pull_request:
@@ -10,8 +10,8 @@ on:
     - cron: "10 1 * * 0"
 
 jobs:
-  test:
-    name: Test
+  build:
+    name: Test Podman image
     runs-on: ubuntu-latest
 
     steps:
@@ -23,5 +23,8 @@ jobs:
       - name: Run the built image.
         run: podman run --name test-container -d --rm docker-ansible
 
-      - name: Verify Ansible is installed and working in the built image.
+      - name: Verify Systemd is installed and working.
+        run: systemctl status
+
+      - name: Verify Ansible is installed and working.
         run: podman exec --tty test-container ansible local -a "hostname"
