@@ -1,0 +1,27 @@
+---
+name: Test podman image
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "10 1 * * 0"
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2.4.2
+
+      - name: Test building image.
+        run: podman build -t docker-ansible .
+
+      - name: Run the built image.
+        run: podman run --name test-container -d --rm docker-ansible
+
+      - name: Verify Ansible is installed and working in the built image.
+        run: podman exec --tty test-container ansible local -a "hostname"
